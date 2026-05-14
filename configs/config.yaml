@@ -1,0 +1,57 @@
+data:
+  n_samples: 2600          # Total samples (matches paper: 2600 sets)
+  n_features: 52           # Raw input features (matches paper: 52 operating variables)
+  n_targets: 8             # Prediction targets (5 yields + 3 flue gas)
+  top_k_features: 25       # Features selected via XGBoost (matches paper)
+  train_ratio: 0.70        # 70% train, 30% test (matches paper)
+  seed: 42
+
+  # Target variable names (Table A2 in paper)
+  target_names:
+    - "Gasoline"           # Y1 - product yield (%)
+    - "Diesel"             # Y2 - product yield (%)
+    - "Slurry"             # Y3 - product yield (%)
+    - "Liquefied_Gas"      # Y4 - product yield (%)
+    - "Dry_Gas"            # Y5 - product yield (%)
+    - "NOx"                # Y6 - flue gas content (ug/g)
+    - "CO2"                # Y7 - flue gas content (ug/g)
+    - "SO2"                # Y8 - flue gas content (ug/g)
+
+preprocessing:
+  sliding_window_step: 5   # Sliding window step size (matches paper)
+  normalize: true          # StandardScaler normalization
+
+xgboost:
+  n_estimators: 100
+  max_depth: 6
+  learning_rate: 0.1
+  subsample: 0.8
+  colsample_bytree: 0.8
+  random_state: 42
+  n_jobs: -1
+
+lstm_ta:
+  # Hidden size candidates: {64, 128, 192, 256} (matches paper)
+  # Optimal per paper: 128 for most targets, 192 for Liquefied Gas/NOx/SO2
+  hidden_size: 128
+  # Window size candidates: {6, 12, 18, 24} (matches paper)
+  # Optimal per paper: 12 for most targets
+  window_size: 12
+  dropout_rate: 0.2        # matches paper
+  batch_size: 128          # matches paper
+  epochs: 100              # matches paper
+  learning_rate: 0.001
+  activation: "tanh"       # matches paper
+
+hyperparameter_search:
+  hidden_sizes: [64, 128, 192, 256]
+  window_sizes: [6, 12, 18, 24]
+
+evaluation:
+  metrics: ["MSE", "RMSE", "MAE", "MAPE", "R2"]
+
+paths:
+  data_dir: "outputs/data"
+  model_dir: "outputs/models"
+  results_dir: "outputs/results"
+  log_dir: "logs"

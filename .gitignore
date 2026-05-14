@@ -25,6 +25,8 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+XGBOOST_LSTM_TA.pdf
+fcc_all_code.txt
 
 # PyInstaller
 #   Usually these files are written by a python script from a template
@@ -156,6 +158,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+fcc_xgboost_lstm_ta
 
 # Spyder project settings
 .spyderproject
